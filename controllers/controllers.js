@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Movie = require('../models/movie');
+const mongoose = require('mongoose');
 const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
 const AuthError = require('../errors/auth-error');
@@ -75,12 +76,12 @@ const getMovies = async (req, res, next) => {
 };
 
 const createMovie = async (req, res, next) => {
-  const { country, director, duration, year, description, image, trailer,
-    nameRU, nameEN, thumbnail, movieId } = req.body;
+  const {country, director, duration, year, description, image, trailer, thumbnail,
+    nameRU, nameEN, movieId} = req.body;
 
   try {
-    const movie = new Movie({ country, director, duration, year, description, image, trailer,
-      nameRU, nameEN, thumbnail, movieId });
+    const movie = new Movie({country, director, duration, year, description, image, trailer, thumbnail,
+      nameRU, nameEN, movieId});
     movie.owner = new mongoose.Types.ObjectId(req.user._id);
     await movie.save();
     res.send(movie);
@@ -96,6 +97,7 @@ const createMovie = async (req, res, next) => {
 const deleteMovieById = async (req, res, next) => {
   try {
     const movie = await Movie.findById(req.params.movieId)
+      console.log(req.params.movieId)
       .orFail(new NotFoundError('Объект не найден'));
     if (movie.owner.toString() !== req.user._id) {
       throw new BadRequestError('Пользователь не имеет прав на удаление данной карточки');
