@@ -2,24 +2,11 @@ const express = require('express');
 const { celebrate, Joi } = require('celebrate');
 const { isURL } = require('validator');
 
-const routes = express.Router();
-const {
-  getCurrentUser, updateProfile, getMovies, createMovie, deleteMovieById
-} = require('../controllers/controllers');
-
-// вернуть информацию о текущем пользователе
-routes.get('/users/me', getCurrentUser);
-
-// обновить профиль текущего пользователя
-routes.patch('/users/me', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().email().required(),
-    name: Joi.string().min(2).max(30).required(),
-  }),
-}), updateProfile);
+const movieRoutes = express.Router();
+const { getMovies, createMovie, deleteMovieById } = require('../controllers/movies');
 
 // вернуть все сохраненные пользователем фильмы
-routes.get('/movies', getMovies);
+movieRoutes.get('/', getMovies);
 
 // создать фильм
 const checkURL = (val, helper) => {
@@ -29,7 +16,7 @@ const checkURL = (val, helper) => {
 
   return val;
 };
-routes.post('/movies', celebrate({
+movieRoutes.post('/', celebrate({
   body: Joi.object().keys({
     country: Joi.string().required(),
     director: Joi.string().required(),
@@ -46,10 +33,10 @@ routes.post('/movies', celebrate({
 }), createMovie);
 
 // удалить фильм по id
-routes.delete('/movies/movieId', celebrate({
+movieRoutes.delete('/movieId', celebrate({
   params: Joi.object().keys({
     movieId: Joi.string().hex().length(24),
   }).unknown(true),
 }), deleteMovieById);
 
-exports.routes = routes;
+exports.movieRoutes = movieRoutes;
