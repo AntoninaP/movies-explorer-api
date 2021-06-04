@@ -1,6 +1,5 @@
 const express = require('express');
 const { celebrate, Joi } = require('celebrate');
-const { isURL } = require('validator');
 
 const userRoutes = express.Router();
 const { getCurrentUser, updateProfile } = require('../controllers/users');
@@ -17,4 +16,3 @@ userRoutes.patch('/me', celebrate({
 }), updateProfile);
 
 exports.userRoutes = userRoutes;
-

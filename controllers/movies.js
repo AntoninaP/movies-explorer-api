@@ -1,12 +1,7 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const Movie = require('../models/movie');
 const mongoose = require('mongoose');
+const Movie = require('../models/movie');
 const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
-
-const { NODE_ENV, JWT_SECRET } = process.env;
-const opt = { new: true, runValidators: true };
 
 const getMovies = async (req, res, next) => {
   try {
@@ -18,12 +13,25 @@ const getMovies = async (req, res, next) => {
 };
 
 const createMovie = async (req, res, next) => {
-  const {country, director, duration, year, description, image, trailer, thumbnail,
-    nameRU, nameEN, movieId} = req.body;
+  const {
+    country, director, duration, year, description, image, trailer, thumbnail,
+    nameRU, nameEN, movieId,
+  } = req.body;
 
   try {
-    const movie = new Movie({country, director, duration, year, description, image, trailer, thumbnail,
-      nameRU, nameEN, movieId});
+    const movie = new Movie({
+      country,
+      director,
+      duration,
+      year,
+      description,
+      image,
+      trailer,
+      thumbnail,
+      nameRU,
+      nameEN,
+      movieId,
+    });
     movie.owner = new mongoose.Types.ObjectId(req.user._id);
     await movie.save();
     res.send(movie);

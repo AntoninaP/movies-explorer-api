@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const mongoose = require('mongoose');
 const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
 const AuthError = require('../errors/auth-error');
@@ -91,4 +90,6 @@ const login = async (req, res, next) => {
   }
 };
 
-module.exports = { getCurrentUser, createUser, updateProfile, login };
+module.exports = {
+  getCurrentUser, createUser, updateProfile, login,
+};
