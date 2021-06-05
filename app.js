@@ -15,7 +15,7 @@ const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./configs/rate-limiter-config');
 
-mongoose.connect(process.env.MONGO_URL, {
+mongoose.connect("mongodb://localhost:27017/filmsdb", {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
