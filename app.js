@@ -13,12 +13,15 @@ const { PORT = 3000 } = process.env;
 const app = express();
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const limiter = require('./configs/rate-limiter-config');
 
-mongoose.connect('mongodb://localhost:27017/filmsdb', {
+mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
 });
+
+app.use(limiter);
 
 app.use(helmet());
 
