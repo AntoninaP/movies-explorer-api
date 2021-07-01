@@ -28,14 +28,14 @@ movieRoutes.post('/', celebrate({
     thumbnail: Joi.string().custom(checkURL, 'invalid URL').required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
-    movieId: Joi.string().required().hex().length(24),
+    movieId: Joi.number().required(),
   }),
 }), createMovie);
 
 // удалить фильм по id
 movieRoutes.delete('/:movieId', celebrate({
   params: Joi.object().keys({
-    _id: Joi.string().hex().length(24),
+    movieId: Joi.number(),
   }).unknown(true),
 }), deleteMovieById);
 

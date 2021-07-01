@@ -5,7 +5,7 @@ const BadRequestError = require('../errors/bad-request-error');
 
 const getMovies = async (req, res, next) => {
   try {
-    const allMovies = await Movie.find({}).sort({ createAt: -1 });
+    const allMovies = await Movie.find({owner: req.user._id}).sort({ createAt: -1 });
     res.status(200).send(allMovies);
   } catch (err) {
     next(err);
@@ -46,14 +46,12 @@ const createMovie = async (req, res, next) => {
 
 const deleteMovieById = async (req, res, next) => {
   try {
-    const movie = await Movie.findById(req.params.movieId)
-      .orFail(new NotFoundError('Объект не найден'));
+    const movie = await Movie.findOne({movieId: req.params.movieId}).orFail(new NotFoundError('Объект не найден'));
     if (movie.owner.toString() !== req.user._id) {
       throw new BadRequestError('Пользователь не имеет прав на удаление данной карточки');
     }
 
-    const movieWithId = await Movie.findByIdAndDelete(req.params.movieId)
-      .orFail(new NotFoundError('Объект не найден'));
+    const movieWithId = await Movie.findOneAndDelete({movieId: req.params.movieId}).orFail(new NotFoundError('Объект не найден'));
     res.status(200).send(movieWithId);
   } catch (err) {
     next(err);
