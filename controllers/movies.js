@@ -46,8 +46,8 @@ const createMovie = async (req, res, next) => {
 
 const deleteMovieById = async (req, res, next) => {
   try {
-    const movie = await Movie.findOne({movieId: req.params.movieId}).orFail(new NotFoundError('Объект не найден'));
-    if (movie.owner.toString() !== req.user._id) {
+    const movie = await Movie.findOne({movieId: req.params.movieId, owner: req.user._id}).orFail(new NotFoundError('Объект не найден'));
+    if (!movie) {
       throw new BadRequestError('Пользователь не имеет прав на удаление данной карточки');
     }
 
